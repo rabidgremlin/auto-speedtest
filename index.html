@@ -34,7 +34,7 @@ body {
 <script src="http://d3js.org/d3.v3.js"></script>
 <script>
 
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
+var margin = {top: 20, right: 50, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -60,7 +60,7 @@ var dl = d3.svg.line()
 
 var ul = d3.svg.line()
     .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.upload); });    
+    .y(function(d) { return y(d.upload); });
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -71,13 +71,14 @@ var svg = d3.select("body").append("svg")
 d3.csv("results.csv", function(error, data) {
   data.forEach(function(d) {
     d.date = parseDate(d.datetime);
-    d.ping = d.ping;
-    d.upload = d.upload;
-    d.download = d.download;
+    d.ping = +d.ping;
+    d.upload = +d.upload;
+    d.download = +d.download;
   });
 
+
   x.domain(d3.extent(data, function(d) { return d.date; }));
-  y.domain(d3.extent(data, function(d) { return d.download; }));
+  y.domain([0,d3.max(data, function(d) { return d.download; })+2]);
 
   svg.append("g")
       .attr("class", "x axis")
@@ -98,21 +99,37 @@ d3.csv("results.csv", function(error, data) {
       .datum(data)
       .attr("class", "dlline")
       .attr("d", dl);
-      
+
   svg.append("path")
       .datum(data)
       .attr("class", "ulline")
-      .attr("d", ul);      
-      
-      
-  svg.append("text")
-      .datum(function(d) { 
-      return {value: d[d.length - 1]}; 
+      .attr("d", ul);
+
+      svg.append("text")
+    		.attr("transform", "translate(" + x(data[data.length-1].date) + "," + y(data[data.length-1].download) + ")")
+    		.attr("dy", ".35em")
+        .attr("x","3")
+    		.attr("text-anchor", "start")
+    		.style("fill", "green")
+    		.text("Download");
+
+        svg.append("text")
+          .attr("transform", "translate(" + x(data[data.length-1].date) + "," + y(data[data.length-1].upload) + ")")
+          .attr("dy", ".35em")
+          .attr("x","3")
+          .attr("text-anchor", "start")
+          .style("fill", "orange")
+          .text("Upload");
+
+
+ /* svg.append("text")
+      .datum(function(d) {
+      return {value: d[d.length - 1]};
       })
       .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.upload) + ")"; })
       .attr("x", 3)
       .attr("dy", ".35em")
-      .text(function(d) { "Upload" });      
+      .text(function(d) { "Upload" });*/
 });
 
 </script>
