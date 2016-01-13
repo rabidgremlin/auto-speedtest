@@ -4,7 +4,7 @@
 
 NOW=$(date +"%s,%Y-%m-%d %T")
 
-speedtest-cli --server 4135 --simple > /tmp/speedtest-results
+./speedtest-cli --server 4135 --simple > /tmp/speedtest-results
 # TODO check for errors
 
 
