@@ -17,5 +17,6 @@ RUN dos2unix capture.sh && \
     dos2unix start.sh && \ 
     chmod +x cap*.sh && \
     chmod +x start.sh
+    ENV delay 5
 
  CMD ["./start.sh"]       

@@ -10,7 +10,7 @@ docker build -t speedtest .
 
 To start, run:
 ```
-docker run --rm -it -p 8000:8000 speedtest
+docker run --rm -it -e delay=5 -p 8000:8000 speedtest
 ```
 
 Then browse to http://localhost:8000
