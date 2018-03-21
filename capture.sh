@@ -4,7 +4,15 @@
 
 NOW=$(date +"%s,%Y-%m-%d %T")
 
-speedtest-cli --server 4135 --simple > /tmp/speedtest-results
+if [ $server -ne 0 ]; then #false if equal to 0 or not a number (does show an error if not a number or not set, non fatal)
+  echo "Server has been set to $server"
+  srv="--server $server"
+else
+  echo "Automatically selecting server"
+  srv=""
+fi
+
+speedtest-cli $srv --simple > /tmp/speedtest-results
 # TODO check for errors
 
 
